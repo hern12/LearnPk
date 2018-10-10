@@ -12,5 +12,10 @@
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html"
+  },
+  "dependencies": {
+    "fiery": "^0.2.0-3",
+    "firebase": "^5.5.3",
+    "react-router-dom": "^4.3.1"
   }
 }

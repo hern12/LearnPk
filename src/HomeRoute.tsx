@@ -1,7 +1,7 @@
 import React from 'react'
-import * as fiery from 'fiery'
-import { ErrorBox } from './ErrorBox';
+import { LoginRequire } from './LoginRequire';
 import { firebase } from './firebase';
+import { Link } from 'react-router-dom';
 
 
 export class HomeRoute extends React.Component{
@@ -9,25 +9,24 @@ export class HomeRoute extends React.Component{
         return (
             <div>
                 <h1>screen master</h1>
-                <fiery.Auth>
-                    {authState => fiery.unwrap(authState,{
-                        loading: () => <div>Loading authentication state...</div>,
-                        error: (error,retry) => <div><ErrorBox error={error} retry={retry} /></div>,
-                        completed: (user) => {
-                            if(user){
-                                console.log(user)
-                                return <div>Hello {user.displayName}</div>
-                            }else{
-                                return <div>Please log in: <button onClick={logIn}>Log in with GitHub</button></div>
-                            }
-                        }
-                    })}
-                </fiery.Auth>
+                <LoginRequire>
+                    { user => <Home/>}
+                </LoginRequire>
             </div>
         )
     }
 }
 
-function logIn() {
-    firebase.auth().signInWithPopup(new firebase.auth.GithubAuthProvider())
+class Home extends React.Component{
+    render() {
+        const currentUser = firebase.auth().currentUser!;
+        return(
+            <div>
+                Hello, {currentUser.email}
+                You can now enter the <Link to="/editor">editor</Link>.
+                <p><button onClick={() => firebase.auth().signOut()}>Log out</button></p>
+            </div>
+        )
+    }
 }
+
